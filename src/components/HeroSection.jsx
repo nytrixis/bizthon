@@ -1,9 +1,57 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/image.png';
 import bg from '../assets/Kawach.jpg';
 
 const HeroSection = () => {
+  const [isListening, setIsListening] = useState(false);
+  const [promptCount, setPromptCount] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let speechSynthesis;
+    let recognition;
+
+    if (isListening) {
+      if (promptCount < 2) {
+        speechSynthesis = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance("Speak: Ambulance");
+        speechSynthesis.speak(utterance);
+
+        utterance.onend = () => {
+          setPromptCount(prevCount => prevCount + 1);
+        };
+      } else {
+        recognition = new window.webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript.toLowerCase();
+          if (transcript.includes('ambulance')) {
+            navigate('/sos');
+          }
+        };
+
+        recognition.start();
+      }
+    }
+    return () => {
+      if (speechSynthesis) {
+        speechSynthesis.cancel();
+      }
+      if (recognition) {
+        recognition.stop();
+      }
+    };
+
+  }, [isListening, promptCount, navigate]);
+
+  const handleSOSClick = () => {
+    setIsListening(true);
+    setPromptCount(0);
+  };
+
   return (
     <motion.div 
       className="relative h-screen pt-[30px]"
@@ -54,6 +102,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.8 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={handleSOSClick}
         >
           <div className="flex items-center justify-center mb-1 pt-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

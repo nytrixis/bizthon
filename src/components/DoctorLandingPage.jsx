@@ -65,20 +65,20 @@ const ExploreFeatures = () => {
           <FeatureCard
             image={doctor1}
             title="Appointments"
-            description="1 on 1 virtual meet and 24/7 on call mental health support."
+            description="A comprehensive view of all  appointments, simplifying scheduling and management."
             link="/feature1"
             className="pl-20"
           />
           <FeatureCard
             image={doctor2}
             title="Consultation Forms"
-            description="Earliest Ambulance Dispatch with medical team to tracked geolocation."
+            description="Streamlined form  to manage consultation requests and patient communication seamlessly."
             link="/feature2"
           />
           <FeatureCard
             image={doctor3}
             title="Document Sentinel"
-            description="Access and view your health history and medical reports anywhere, anytime."
+            description="Securely exchange information through a decentralized system, ensuring privacy."
             link="/feature3"
             className="pr-20"
           />
