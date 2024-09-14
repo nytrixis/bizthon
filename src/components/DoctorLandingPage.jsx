@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import feature1 from '../assets/feature1.jpg';
-import feature2 from '../assets/feature2.jpg';
-import feature3 from '../assets/feature3.jpg';
+import doctor1 from '../assets/doctor1.jpg';
+import doctor2 from '../assets/doctor2.jpg';
+import doctor3 from '../assets/doctor3.jpg';
 const FeatureCard = ({ image, title, description, link, className }) => (
   <motion.div 
     className={`w-1/3 p-4 ${className}`}
@@ -46,12 +46,12 @@ const ExploreFeatures = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <motion.h2 
-          className="text-4xl font-bold text-white text-center mb-[20px]"
+          className="text-4xl font-bold text-white text-center mb-[20px] mt-[50px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          Explore Features
+          Doctor Dashboard
         </motion.h2>
         <motion.h4 
           className="text-2xl font-normal text-white text-center mb-[80px]"
@@ -59,25 +59,25 @@ const ExploreFeatures = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          Sail through the best of our services
+          Manage Appointments, Review Patient Documents and <br />Provide Prescriptions
         </motion.h4>
         <div className="flex justify-between w-full">
           <FeatureCard
-            image={feature1}
-            title="Virtual Consultation"
+            image={doctor1}
+            title="Appointments"
             description="1 on 1 virtual meet and 24/7 on call mental health support."
             link="/feature1"
             className="pl-20"
           />
           <FeatureCard
-            image={feature3}
-            title="Immediate SOS Response"
+            image={doctor2}
+            title="Consultation Forms"
             description="Earliest Ambulance Dispatch with medical team to tracked geolocation."
             link="/feature2"
           />
           <FeatureCard
-            image={feature2}
-            title="Decentralized Medical Records"
+            image={doctor3}
+            title="Document Sentinel"
             description="Access and view your health history and medical reports anywhere, anytime."
             link="/feature3"
             className="pr-20"

@@ -1,7 +1,7 @@
 import React from 'react';
-import bg from '../assets/Kawach.jpg';
+import bg from '../assets/doctor.jpg';
 
-const SharedBackground = ({ children }) => {
+const DoctorBg = ({ children }) => {
   return (
     <div className="relative min-h-screen">
       <div 
@@ -17,4 +17,4 @@ const SharedBackground = ({ children }) => {
   );
 };
 
-export default SharedBackground;
+export default DoctorBg;
