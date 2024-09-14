@@ -13,6 +13,7 @@ import DoctorNavbar from './components/DoctorNavbar';
 import LandingPage from './components/DoctorLandingPage';
 import DoctorBg from './components/DoctorBg';
 import SOSPage from './components/SOS';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
@@ -68,6 +69,15 @@ function App() {
             <Navbar />
             <SharedBackground>
               <SOSPage />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
+          <Route path='/dashboard' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <Dashboard />
               <Footer />
             </SharedBackground>
             </>
