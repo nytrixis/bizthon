@@ -14,6 +14,7 @@ import LandingPage from './components/DoctorLandingPage';
 import DoctorBg from './components/DoctorBg';
 import SOSPage from './components/SOS';
 import Dashboard from './components/Dashboard';
+import PredictionComponent from './components/PredictionComponent';
 
 function App() {
   return (
@@ -82,9 +83,20 @@ function App() {
             </SharedBackground>
             </>
           } />
+
+          <Route path='/prediction' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <PredictionComponent />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
         </Routes>
         
       </div>
+
     </Router>
   );
 }
