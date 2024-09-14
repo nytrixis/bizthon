@@ -201,19 +201,94 @@ function PredictionComponent() {
                 Predict
             </motion.button>
             {prediction && (
-                <motion.div
-                    className="mt-6 p-4 bg-green-100 rounded-md"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+  <motion.div
+    className="mt-6 p-6 bg-gradient-to-r from-green-100 to-green-50 rounded-lg shadow-lg"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+  >
+    <h3 className="text-xl font-semibold text-green-900 flex items-center mb-4">
+      <span className="mr-2 text-green-700">
+        <i className="fas fa-stethoscope"></i>
+      </span>
+      Prediction Results
+    </h3>
+
+    <div className="mb-2 flex items-center">
+      <span className="text-green-700 mr-2">
+        <i className="fas fa-disease"></i>
+      </span>
+      <p className="text-green-700 text-lg font-medium">
+        <strong>Disease:</strong> {prediction.disease}
+      </p>
+    </div>
+
+    <div className="mb-2 flex items-center">
+      <span className="text-green-700 mr-2">
+        <i className="fas fa-info-circle"></i>
+      </span>
+      <p className="text-green-700">
+        <strong>Description:</strong> {prediction.description}
+      </p>
+    </div>
+
+    <div className="mb-2 flex items-center">
+      <span className="text-green-700 mr-2">
+        <i className="fas fa-shield-alt"></i>
+      </span>
+      <p className="text-green-700">
+        <strong>Precautions:</strong> {prediction.precautions.join(', ')}
+      </p>
+    </div>
+
+    <div className="mb-2 flex items-center">
+      <span className="text-green-700 mr-2">
+        <i className="fas fa-pills"></i>
+      </span>
+      <p className="text-green-700">
+        <strong>Medications:</strong> {prediction.medications.join(', ')}
+      </p>
+    </div>
+
+    <div className="mb-2 flex items-center">
+      <span className="text-green-700 mr-2">
+        <i className="fas fa-apple-alt"></i>
+      </span>
+      <p className="text-green-700">
+        <strong>Diet:</strong> {prediction.diet.join(', ')}
+      </p>
+    </div>
+
+    <div className="mb-2 flex items-center">
+      <span className="text-green-700 mr-2">
+        <i className="fas fa-dumbbell"></i>
+      </span>
+      <p className="text-green-700">
+        <strong>Workout:</strong> {prediction.workout.join(', ')}
+      </p>
+    </div>
+
+                    <div className="mt-6">
+            <h4 className="text-lg font-semibold text-blue-800">Additional Resources:</h4>
+            <div className="flex justify-between mt-3">
+                <a 
+                    href={`https://www.mayoclinic.org/diseases-conditions/${prediction.disease.toLowerCase().replace(/\s+/g, '-')}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex-1 mr-2 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300 text-center"
                 >
-                    <h3 className="text-lg font-semibold text-green-800">Prediction Results:</h3>
-                    <p className="text-green-700">Disease: {prediction.disease}</p>
-                    <p className="text-green-700">Description: {prediction.description}</p>
-                    <p className="text-green-700">Precautions: {prediction.precautions.join(', ')}</p>
-                    <p className="text-green-700">Medications: {prediction.medications.join(', ')}</p>
-                    <p className="text-green-700">Diet: {prediction.diet.join(', ')}</p>
-                    <p className="text-green-700">Workout: {prediction.workout.join(', ')}</p>
+                    Mayo Clinic Guide
+                </a>
+                <a 
+                    href={`https://medlineplus.gov/ency/article/${prediction.disease.toLowerCase().replace(/\s+/g, '')}.htm`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex-1 ml-2 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 text-center"
+                >
+                    MedlinePlus Information
+                </a>
+            </div>
+        </div>
                 </motion.div>
             )}
         </motion.div>
