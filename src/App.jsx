@@ -12,6 +12,7 @@ import ContactUs from './components/ContactUs';
 import DoctorNavbar from './components/DoctorNavbar';
 import LandingPage from './components/DoctorLandingPage';
 import DoctorBg from './components/DoctorBg';
+import SOSPage from './components/SOS';
 
 function App() {
   return (
@@ -28,9 +29,31 @@ function App() {
             </SharedBackground>
             </>
           } />
-          <Route path="/login" element={<LoginSignup />} />
-          <Route path="/about" element={<About />} />
-          <Route path='/contact' element={<ContactUs />} />
+          <Route path="/login" element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <LoginSignup />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
+          <Route path="/about" element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <About />
+            </SharedBackground>
+            </>
+          } />
+          <Route path="/contact" element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <ContactUs />
+            </SharedBackground>
+            </>
+          } />
           <Route path='/doctor' element={
             <>
             <DoctorNavbar />
@@ -38,6 +61,15 @@ function App() {
               <LandingPage />
               <Footer />
             </DoctorBg>
+            </>
+          } />
+          <Route path='/sos' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <SOSPage />
+              <Footer />
+            </SharedBackground>
             </>
           } />
         </Routes>
