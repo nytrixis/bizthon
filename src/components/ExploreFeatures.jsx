@@ -58,10 +58,10 @@ const ExploreFeatures = () => {
         </div>
       </div>
       <div className="py-12">
-  <div className="container mx-auto text-center mt-20">
+  {/* <div className="container mx-auto text-center mt-20">
     <img src={image} alt="Kawach Logo" className="w-[65px] h-[65px] mx-auto mb-4" />
     <p className="text-lg text-gray-400">Empowering you to take control of your health, anytime, <br />anywhere.</p>
-  </div>
+  </div> */}
 </div>
 
     </div>

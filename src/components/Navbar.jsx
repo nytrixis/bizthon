@@ -4,7 +4,7 @@ import '../index.css';
 import logo from '../assets/logo.png';
 const Navbar = () => {
   return (
-    <nav className="bg-primary bg-opacity-90 text-white font-poppins fixed top-0 left-0 right-0 w-full z-50">
+    <nav className="bg-primary bg-opacity-70 text-white font-poppins fixed top-0 left-0 right-0 w-full z-50">
       {/* Full-width container with 10px padding on left and right */}
       <div className="flex items-center justify-between px-[10px] h-10 xl:h-[93px] w-full">
         
