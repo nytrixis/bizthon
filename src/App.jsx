@@ -24,6 +24,7 @@ import PatientNavbar from './components/PatientNavbar';
 import PatientBg from './components/PatientBg';
 import PatientLandingPage from './components/PatientLandingPage';
 import AppointmentForm from './components/AppointmentForm';
+import VideoCallPage from './components/VideoCallPage';
 
 function App() {
   return (
@@ -97,6 +98,15 @@ function App() {
             <PatientNavbar />
             <PatientBg>
               <AppointmentForm />
+              <Footer />
+            </PatientBg>
+            </>
+          } />
+          <Route path="/:sessionId" element={
+            <>
+            <PatientNavbar />
+            <PatientBg>
+              <VideoCallPage />
               <Footer />
             </PatientBg>
             </>
