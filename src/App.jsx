@@ -15,6 +15,15 @@ import DoctorBg from './components/DoctorBg';
 import SOSPage from './components/SOS';
 import Dashboard from './components/Dashboard';
 import PredictionComponent from './components/PredictionComponent';
+import DocumentSentinel from './components/DocumentSentinel';
+import RetrieveDocument from './components/RetrieveDocument';
+import ChemistNavbar from './components/ChemistNavbar';
+import ChemistBg from './components/ChemistBg';
+import ChemistLandingPage from './components/ChemistLandingPage';
+import PatientNavbar from './components/PatientNavbar';
+import PatientBg from './components/PatientBg';
+import PatientLandingPage from './components/PatientLandingPage';
+import AppointmentForm from './components/AppointmentForm';
 
 function App() {
   return (
@@ -65,6 +74,33 @@ function App() {
             </DoctorBg>
             </>
           } />
+          <Route path='/chemist' element={
+            <>
+            <ChemistNavbar />
+            <ChemistBg>
+              <ChemistLandingPage />
+              <Footer />
+            </ChemistBg>
+            </>
+          } />
+          <Route path='/patient' element={
+            <>
+            <PatientNavbar />
+            <PatientBg>
+              <PatientLandingPage />
+              <Footer />
+            </PatientBg>
+            </>
+          } />
+          <Route path='/appointment' element={
+            <>
+            <PatientNavbar />
+            <PatientBg>
+              <AppointmentForm />
+              <Footer />
+            </PatientBg>
+            </>
+          } />
           <Route path='/sos' element={
             <>
             <Navbar />
@@ -89,6 +125,25 @@ function App() {
             <Navbar />
             <SharedBackground>
               <PredictionComponent />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
+          <Route path='/docsen' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <DocumentSentinel />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
+
+          <Route path='/retrieve' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <RetrieveDocument />
               <Footer />
             </SharedBackground>
             </>

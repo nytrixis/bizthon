@@ -39,18 +39,23 @@ def get_predicted_value(symptoms):
 
 
 def predict(data):
-    symptoms = data['symptoms']
+    symptoms = data.get('symptoms', [])
     predicted_disease = get_predicted_value(symptoms)
     desc, precautions_list, medications_list, diet_list, workout_list = helper(predicted_disease)
     
+    # Clean up lists to ensure they contain valid strings and are not empty
+    def clean_list(lst):
+        return [item for item in lst if isinstance(item, str) and item.strip()]
+
     return {
         'disease': predicted_disease,
-        'description': desc,
-        'precautions': precautions_list,
-        'medications': medications_list,
-        'diet': diet_list,
-        'workout': workout_list
+        'description': desc if isinstance(desc, str) else "No description available",
+        'precautions': clean_list(precautions_list),
+        'medications': clean_list(medications_list),
+        'diet': clean_list(diet_list),
+        'workout': clean_list(workout_list)
     }
+
 
 
 def main():

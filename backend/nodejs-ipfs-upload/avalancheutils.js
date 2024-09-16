@@ -40,23 +40,23 @@ const sendKeyViaAvalanche = async (recipientAddress, aesKey) => {
 };
 
 const getKeyFromAvalanche = async (txID) => {
-  try {
-    // Get transaction by ID
-    const tx = await avm.getTx(txID);
-
-    // Extract AES key from transaction data
-    if (tx && tx.tx && tx.tx.tx && tx.tx.tx.tx && tx.tx.tx.tx.data) {
-      const dataBuffer = Buffer.from(tx.tx.tx.tx.data, 'hex');
-      const aesKey = dataBuffer.toString('hex');
-      return aesKey;
-    } else {
-      throw new Error('Transaction does not contain data');
+    try {
+      // Get transaction by ID
+      const tx = await avm.getTx(txID);
+  
+      // Extract AES key from transaction data
+      if (tx && tx.tx && tx.tx.tx && tx.tx.tx.tx && tx.tx.tx.tx.data) {
+        const dataBuffer = Buffer.from(tx.tx.tx.tx.data, 'hex');
+        const aesKey = dataBuffer.toString('hex');
+        return aesKey;
+      } else {
+        throw new Error('Transaction does not contain data');
+      }
+    } catch (error) {
+      console.error('Error retrieving key from Avalanche:', error.message);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error retrieving key from Avalanche:', error.message);
-    throw error;
-  }
-};
+  };  
 
 // Export the functions
 export { sendKeyViaAvalanche, getKeyFromAvalanche };

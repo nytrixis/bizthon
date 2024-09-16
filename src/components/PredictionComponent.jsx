@@ -149,16 +149,28 @@ function PredictionComponent() {
         setSelectedSymptoms(newSelectedSymptoms);
     };
 
-    const handleSubmit = async () => {
-        try {
-            const response = await axios.post('http://localhost:5000/predict', {
-                symptoms: selectedSymptoms.filter(symptom => symptom !== '')
-            });
-            setPrediction(response.data.result);
-        } catch (error) {
-            console.error("Error fetching prediction", error);
-        }
-    };
+    const cleanArray = (arr) => arr.filter(item => item !== 'NaN' && item !== '');
+
+const handleSubmit = async () => {
+    try {
+        const response = await axios.post('http://127.0.0.1:5000/predict', {
+            symptoms: selectedSymptoms.filter(symptom => symptom !== '')
+        });
+        
+        const cleanedData = {
+            ...response.data.result,
+            diet: cleanArray(response.data.result.diet),
+            medications: cleanArray(response.data.result.medications),
+            precautions: cleanArray(response.data.result.precautions),
+        };
+        
+        setPrediction(cleanedData);
+    } catch (error) {
+        console.error("Error fetching prediction", error);
+    }
+};
+
+    
 
     const getAvailableSymptoms = (index) => {
         const selectedBefore = selectedSymptoms.slice(0, index);
