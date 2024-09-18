@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import ChatComponent from './ChatComponent';
-import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash, FaSignOutAlt } from 'react-icons/fa'; // Import icons
+import { FaMicrophone, FaMicrophoneSlash, FaVideo, FaVideoSlash, FaSignOutAlt } from 'react-icons/fa';
 
 const socket = io('http://localhost:3000');
 
@@ -31,6 +31,7 @@ function VideoCallPage() {
                 stream.getTracks().forEach(track => {
                     if (newPeerConnection.signalingState !== 'closed') {
                         newPeerConnection.addTrack(track, stream);
+                    
                     } else {
                         console.error('Peer connection is closed. Cannot add track.');
                     }
@@ -95,15 +96,25 @@ function VideoCallPage() {
 
     const handleDisconnect = () => {
         if (peerConnection) {
+            // Close the peer connection
             peerConnection.close();
             setPeerConnection(null);
         }
+    
         if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
+            // Stop all media tracks
+            mediaStream.getTracks().forEach(track => {
+                track.stop();
+            });
         }
+    
+        // Disconnect the socket
         socket.disconnect();
-        navigate('/patient'); // Redirect to /patient
+    
+        // Redirect to /patient
+        navigate('/patient');
     };
+    
 
     const handleMute = () => {
         if (mediaStream) {
@@ -117,35 +128,56 @@ function VideoCallPage() {
     const handleCameraToggle = () => {
         if (mediaStream) {
             mediaStream.getVideoTracks().forEach(track => {
-                track.enabled = !isCameraOff;
-    
-                // If the camera is turned off, stop the track to release the camera resource
-                if (isCameraOff) {
+                track.enabled = isCameraOff;
+                if (!isCameraOff) {
                     track.stop();
                 }
             });
             setIsCameraOff(!isCameraOff);
+
+            if (isCameraOff) {
+                // Restart video stream when turning camera back on
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then((newStream) => {
+                        const videoTrack = newStream.getVideoTracks()[0];
+                        const sender = peerConnection.getSenders().find(s => s.track.kind === 'video');
+                        sender.replaceTrack(videoTrack);
+                        localVideoRef.current.srcObject = newStream;
+                    })
+                    .catch((error) => {
+                        console.error('Error restarting video:', error);
+                    });
+            }
         }
     };
     
 
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>Virtual Consultation</h1>
-            <div style={styles.videoContainer}>
-                <video ref={localVideoRef} autoPlay muted={isMuted} style={styles.video} />
-                <video ref={remoteVideoRef} autoPlay style={styles.video} />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-4">
+            <h1 className="text-3xl font-bold text-white mb-6">Virtual Consultation</h1>
+            <div className="flex justify-center gap-4 w-full max-w-4xl">
+                <video ref={localVideoRef} autoPlay muted={isMuted} className="w-1/2 rounded-lg shadow-lg" />
+                <video ref={remoteVideoRef} autoPlay className="w-1/2 rounded-lg shadow-lg" />
             </div>
-            <ChatComponent />
-            <div style={styles.controls}>
-                <button style={styles.button} onClick={handleMute}>
-                    {isMuted ? <FaMicrophoneSlash /> : <FaMicrophone />}
+            <ChatComponent className="mt-4 w-full max-w-4xl" />
+            <div className="mt-6 flex gap-6">
+                <button 
+                    className="p-4 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                    onClick={handleMute}
+                >
+                    {isMuted ? <FaMicrophoneSlash size={24} /> : <FaMicrophone size={24} />}
                 </button>
-                <button style={styles.button} onClick={handleCameraToggle}>
-                    {isCameraOff ? <FaVideoSlash /> : <FaVideo />}
+                <button 
+                    className="p-4 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                    onClick={handleCameraToggle}
+                >
+                    {isCameraOff ? <FaVideoSlash size={24} /> : <FaVideo size={24} />}
                 </button>
-                <button style={styles.button} onClick={handleDisconnect}>
-                    <FaSignOutAlt />
+                <button 
+                    className="p-4 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-colors"
+                    onClick={handleDisconnect}
+                >
+                    <FaSignOutAlt size={24} />
                 </button>
             </div>
         </div>

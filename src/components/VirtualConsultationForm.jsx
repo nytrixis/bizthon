@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { FaLanguage } from 'react-icons/fa';
-import axios from 'axios';  // Import axios
+import axios from 'axios'; // Import axios for making API requests
 
-const AppointmentForm = () => {
-  const navigate = useNavigate();
+const VirtualConsultationForm = () => {
   const [formData, setFormData] = useState({
     name: '',
     age: '',
     gender: '',
-    symptoms: '',
+    problem: '',
     duration: '',
     previousTreatment: '',
     medications: '',
   });
   const [showMessage, setShowMessage] = useState(false);
+  const [meetingLink, setMeetingLink] = useState(''); // State to store the meeting link
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,21 +23,26 @@ const AppointmentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Post form data to the backend API
-      await axios.post('http://localhost:3000/api/appointments', formData);
-      
-      // Show success message
+      // Step 1: Post form data to /api/virtual-consultations
+      const consultationResponse = await axios.post('http://localhost:3000/api/virtual-consultations', formData);
+  
+      // Step 2: Request the video call link
+      const videoCallResponse = await axios.post('http://localhost:3000/generate-video-call-link', formData);
+      const meetingLink = videoCallResponse.data.link;
+  
+      // Step 3: Update the consultation record with the meeting link
+      await axios.patch(`http://localhost:3000/api/virtual-consultations/${consultationResponse.data.id}`, { meetingLink });
+  
+      setMeetingLink(meetingLink);
       setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 3000);
+      setTimeout(() => setShowMessage(false), 15000); // Show message for 15 seconds
     } catch (error) {
-      console.error('Error sending appointment request:', error);
+      console.error('Error requesting virtual consultation:', error);
       setShowMessage(false); // Hide message on error
     }
   };
-
-  const handlePredictDisease = () => {
-    navigate('/prediction', { state: { symptoms: formData.symptoms } });
-  };
+  
+  
 
   return (
     <motion.div
@@ -47,7 +51,7 @@ const AppointmentForm = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-3xl font-bold mb-6 text-white">Appointment Form</h2>
+      <h2 className="text-3xl font-bold mb-6 text-white">Virtual Consultation Form</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -82,9 +86,9 @@ const AppointmentForm = () => {
           </select>
         </div>
         <textarea
-          name="symptoms"
-          placeholder="Describe your symptoms"
-          value={formData.symptoms}
+          name="problem"
+          placeholder="Describe the problem you're facing"
+          value={formData.problem}
           onChange={handleChange}
           className="w-full p-2 rounded h-32"
           required
@@ -99,51 +103,64 @@ const AppointmentForm = () => {
           required
         />
         <textarea
+          name="previousTreatment"
+          placeholder="Any previous treatments or therapies?"
+          value={formData.previousTreatment}
+          onChange={handleChange}
+          className="w-full p-2 rounded h-24"
+        />
+        <textarea
           name="medications"
           placeholder="Current medications (if any)"
           value={formData.medications}
           onChange={handleChange}
           className="w-full p-2 rounded h-24"
         />
-        <div className="flex justify-between">
-          <motion.button
-            type="submit"
-            className="bg-green-500 text-white px-6 py-2 rounded"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Request Appointment
-          </motion.button>
-          <motion.button
-            type="button"
-            onClick={handlePredictDisease}
-            className="bg-accent text-white px-6 py-2 rounded"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Predict Disease
-          </motion.button>
-        </div>
+        <motion.button
+          type="submit"
+          className="bg-green-500 text-white px-6 py-2 rounded w-full"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Request Virtual Consultation
+        </motion.button>
       </form>
       {showMessage && (
-        <motion.div
-          className="mt-4 p-2 bg-green-100 text-green-700 rounded"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+  <motion.div
+    className="mt-4 p-4 bg-green-100 text-green-700 rounded"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+  >
+    {meetingLink ? (
+      <div className="flex flex-col items-center">
+        <p className="mb-4">Your virtual consultation request has been submitted.</p>
+        <motion.a
+          href={meetingLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-blue-500 text-white px-6 py-2 rounded text-center w-full max-w-xs"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          You'll be notified when the doctor accepts your request.
-        </motion.div>
-      )}
+          Click here to join the meeting
+        </motion.a>
+      </div>
+    ) : (
+      'Submitting your request...'
+    )}
+  </motion.div>
+)}
+
       <motion.button
         className="fixed bottom-4 right-4 bg-gray-800 text-white p-2 rounded-full"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        <FaLanguage size={50} />
+        <FaLanguage size={24} />
       </motion.button>
     </motion.div>
   );
 };
 
-export default AppointmentForm;
+export default VirtualConsultationForm;

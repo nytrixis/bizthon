@@ -25,6 +25,8 @@ import PatientBg from './components/PatientBg';
 import PatientLandingPage from './components/PatientLandingPage';
 import AppointmentForm from './components/AppointmentForm';
 import VideoCallPage from './components/VideoCallPage';
+import VirtualConsultationForm from './components/VirtualConsultationForm';
+import DoctorDash from './components/DoctorDash';
 
 function App() {
   return (
@@ -102,6 +104,15 @@ function App() {
             </PatientBg>
             </>
           } />
+          <Route path='/consultation' element={
+            <>
+            <PatientNavbar />
+            <PatientBg>
+              <VirtualConsultationForm />
+              <Footer />
+            </PatientBg>
+            </>
+          } />
           <Route path="/:sessionId" element={
             <>
             <PatientNavbar />
@@ -125,6 +136,15 @@ function App() {
             <Navbar />
             <SharedBackground>
               <Dashboard />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
+          <Route path='/dash' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <DoctorDash />
               <Footer />
             </SharedBackground>
             </>
