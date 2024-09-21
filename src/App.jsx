@@ -43,7 +43,7 @@ function App() {
             </SharedBackground>
             </>
           } />
-          <Route path="/login" element={
+          <Route path="/auth" element={
             <>
             <Navbar />
             <SharedBackground>
