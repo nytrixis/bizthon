@@ -1,7 +1,62 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaBars, FaHistory, FaChartLine, FaUser, FaMicrophone } from 'react-icons/fa';
+
+
+const PrescriptionsSection = () => {
+  const [prescriptions, setPrescriptions] = useState([]);
+
+  useEffect(() => {
+    const fetchPrescriptions = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3002/api/prescriptions/`);
+        setPrescriptions(response.data);
+      } catch (error) {
+        console.error('Error fetching prescriptions:', error);
+      }
+    };
+
+    fetchPrescriptions();
+  }, []);
+
+  return (
+    <motion.div className="mx-auto w-[1300px] px-4 mt-12">
+      <h3 className="text-3xl font-bold mb-6 text-center text-white">Recent Prescriptions</h3>
+      <motion.div className="overflow-hidden rounded-lg shadow-lg">
+        <table className="w-full bg-white bg-opacity-60">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-4 text-left font-semibold">Date</th>
+              <th className="p-4 text-left font-semibold">Doctor</th>
+              <th className="p-4 text-left font-semibold">Diagnosis</th>
+              <th className="p-4 text-left font-semibold">Medications</th>
+            </tr>
+          </thead>
+          <tbody>
+            {prescriptions.map((prescription, index) => (
+              <motion.tr key={index}>
+                <td className="p-4">{new Date(prescription.timestamp).toLocaleDateString()}</td>
+                <td className="p-4">Dr. {prescription.doctorName}</td>
+                <td className="p-4">{prescription.prescriptionData.diagnosis}</td>
+                <td className="p-4">
+                  {prescription.prescriptionData.medications.map((med, idx) => (
+                    <div key={idx}>
+                      {med.name} - {med.dosage} ({med.frequency})
+                    </div>
+                  ))}
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+
 
 const PatientLandingPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -185,6 +240,8 @@ const PatientLandingPage = () => {
     </table>
   </motion.div>
 </motion.div>
+
+<PrescriptionsSection />
 
       </motion.div>
     </motion.div>

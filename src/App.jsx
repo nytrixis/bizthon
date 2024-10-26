@@ -27,10 +27,14 @@ import AppointmentForm from './components/AppointmentForm';
 import VideoCallPage from './components/VideoCallPage';
 import VirtualConsultationForm from './components/VirtualConsultationForm';
 import DoctorDash from './components/DoctorDash';
+import { AlephiumWalletProvider } from '@alephium/web3-react'
+
 
 function App() {
   return (
+    <AlephiumWalletProvider network="testnet" addressGroup={0}>
     <Router>
+      
       <div className="bg-background min-h-screen font-poppins">
         <Routes>
           <Route path="/" element={
@@ -183,6 +187,7 @@ function App() {
       </div>
 
     </Router>
+    </AlephiumWalletProvider>
   );
 }
 export default App;

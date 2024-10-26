@@ -1,0 +1,46 @@
+Contract PrescriptionNFT {
+    event PrescriptionCreated(tokenId: U256, patient: Address, doctor: Address)
+    event PrescriptionFilled(tokenId: U256)
+
+    struct Prescription {
+        patientId: Address
+        doctorId: Address
+        prescriptionData: ByteVec
+        timestamp: U256
+        isActive: Bool
+        isFilled: Bool
+    }
+
+    @using(preapprovedAssets = true, checkExternalCaller = false)
+    pub fn createPrescription(patient: Address, prescriptionData: ByteVec) -> U256 {
+        let tokenId = contractState.prescriptionCount
+        let prescription = Prescription {
+            patientId: patient,
+            doctorId: callerAddress!(),
+            prescriptionData: prescriptionData,
+            timestamp: blockTimeStamp!(),
+            isActive: true,
+            isFilled: false
+        }
+        
+        contractState.prescriptions.put(tokenId, prescription)
+        contractState.prescriptionCount = tokenId + 1
+        emit PrescriptionCreated(tokenId, patient, callerAddress!())
+        return tokenId
+    }
+
+    @using(preapprovedAssets = true, checkExternalCaller = false)
+    pub fn fillPrescription(tokenId: U256) -> () {
+        let prescription = contractState.prescriptions.get(tokenId)
+        assert!(prescription.isActive, "Prescription is not active")
+        assert!(!prescription.isFilled, "Prescription already filled")
+        
+        prescription.isFilled = true
+        contractState.prescriptions.put(tokenId, prescription)
+        emit PrescriptionFilled(tokenId)
+    }
+
+    pub fn getPrescription(tokenId: U256) -> Prescription {
+        return contractState.prescriptions.get(tokenId)
+    }
+}

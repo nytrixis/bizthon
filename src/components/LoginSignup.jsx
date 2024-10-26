@@ -1,26 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import { getAnalytics } from 'firebase/analytics';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import axios from 'axios';
 import SharedBackground from './SharedBackground';
-
-// Firebase configuration (replace with your own)
-const firebaseConfig = {
-  apiKey: "AIzaSyCzmbMfCSCnNt180N8knTh_AAHQULWCi9s",
-  authDomain: "kawach-2e2dd.firebaseapp.com",
-  projectId: "kawach-2e2dd",
-  storageBucket: "kawach-2e2dd.appspot.com",
-  messagingSenderId: "608995123680",
-  appId: "1:608995123680:web:c56441173eecc75f100b85",
-  measurementId: "G-0580NK7N7S"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-const auth = getAuth(app);
 
 const LoginSignup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -55,42 +36,54 @@ const LoginSignup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, dob, gender, role, contactNumber, email, emergencyContact, password } = formData;
-
+    
     if (isLogin) {
-      // Login logic with unique code
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        alert('Login successful!');
-        navigate('/');
+        const response = await axios.post('http://localhost:3002/api/login', {
+          email: formData.email,
+          password: formData.password
+        });
+        
+        if (response.data.success) {
+          // Redirect based on role
+          switch(response.data.user.role) {
+            case 'patient':
+              navigate('/patient');
+              break;
+            case 'doctor':
+              navigate('/doctor');
+              break;
+            case 'chemist':
+              navigate('/chemist');
+              break;
+            default:
+              navigate('/');
+          }
+        }
       } catch (error) {
-        alert('Error logging in: ' + error.message);
+        alert('Login failed: ' + error.response.data.message);
       }
     } else {
-      // Signup logic
-      const uniqueCode = generateUniqueCode();
-      const age = calculateAge(dob);
-      const userData = { name, dob, gender, role, contactNumber, email, emergencyContact, age, uniqueCode };
-
       try {
-        // Check if email already exists
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const generatedUniqueCode = generateUniqueCode();
+        const age = calculateAge(formData.dob);
+        const userData = { 
+          ...formData, 
+          age, 
+          uniqueCode: generatedUniqueCode 
+        };
 
-        // Add user data to Firestore
-        await addDoc(collection(db, 'users'), userData);
-
-        // Show unique code on screen
-        alert(`Your unique code is: ${uniqueCode}. Please save this for login.`);
-        navigate('/');
-      } catch (error) {
-        if (error.code === 'auth/email-already-in-use') {
-          alert('This email is already in use. Please log in.');
-        } else {
-          console.error('Error adding user: ', error);
+        const response = await axios.post('http://localhost:3002/api/signup', userData);
+        
+        if (response.data.success) {
+          alert(`Your unique code is: ${generatedUniqueCode}. Please save this for login.`);
+          setIsLogin(true); // Switch to login view
         }
+      } catch (error) {
+        alert('Signup failed: ' + error.response.data.message);
       }
     }
-};
+  };
 
 
   return (
