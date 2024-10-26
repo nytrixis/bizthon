@@ -95,7 +95,7 @@ const LoginSignup = () => {
 
   return (
     <SharedBackground>
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 mt-20">
+    <div className="min-h-screen flex items-center justify-center mt-20">
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl font-bold mb-4">{isLogin ? 'Login' : 'Sign Up'}</h2>
         <form onSubmit={handleSubmit}>
