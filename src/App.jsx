@@ -28,6 +28,11 @@ import VideoCallPage from './components/VideoCallPage';
 import VirtualConsultationForm from './components/VirtualConsultationForm';
 import DoctorDash from './components/DoctorDash';
 import { AlephiumWalletProvider } from '@alephium/web3-react'
+import InsuranceDashboard from './components/insurance/InsuranceDashboard';
+import PolicyForm from './components/insurance/PolicyForm';
+import ClaimForm from './components/insurance/ClaimForm';
+import CoverageDetails from './components/insurance/CoverageDetails';
+
 
 
 function App() {
@@ -168,6 +173,16 @@ function App() {
             <Navbar />
             <SharedBackground>
               <DocumentSentinel />
+              <Footer />
+            </SharedBackground>
+            </>
+          } />
+
+<Route path='/insurance' element={
+            <>
+            <Navbar />
+            <SharedBackground>
+              <InsuranceDashboard />
               <Footer />
             </SharedBackground>
             </>
