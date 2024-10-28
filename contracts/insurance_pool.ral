@@ -1,8 +1,8 @@
-Contract InsurancePool(
-    mut policies: Map[(U256, Policy)],
+Contract InsurancePool = {
+    mut policies: Map[U256, Policy],
     mut policyCount: U256,
     mut claimCount: U256
-) {
+} {
     event PolicyCreated(policyId: U256, holder: Address, coverage: U256)
     event ClaimSubmitted(claimId: U256, policyId: U256, amount: U256)
     event ClaimProcessed(claimId: U256, approved: Bool)

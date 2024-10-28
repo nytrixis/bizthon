@@ -1,7 +1,7 @@
-Contract PrescriptionNFT(
+Contract PrescriptionNFT = {
     mut prescriptions: Map[U256, Prescription],
     mut prescriptionCount: U256
-) {
+} {
     event PrescriptionCreated(tokenId: U256, patient: Address, doctor: Address)
     event PrescriptionFilled(tokenId: U256)
 
