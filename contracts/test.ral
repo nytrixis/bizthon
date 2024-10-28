@@ -1,2 +1,5 @@
-Contract TestContract = {
+TxScript TestContract {
+    pub fn main() -> () {
+        return
+    }
 }

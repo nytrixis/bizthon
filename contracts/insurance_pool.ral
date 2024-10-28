@@ -1,8 +1,8 @@
-Contract InsurancePool = {
-    mut policies: Map[U256, Policy],
-    mut policyCount: U256,
+TxScript InsurancePool {
+    mut policies: Map[U256, Policy]
+    mut policyCount: U256
     mut claimCount: U256
-} {
+
     event PolicyCreated(policyId: U256, holder: Address, coverage: U256)
     event ClaimSubmitted(claimId: U256, policyId: U256, amount: U256)
     event ClaimProcessed(claimId: U256, approved: Bool)
@@ -19,10 +19,9 @@ Contract InsurancePool = {
         approvedClaims: U256
     }
 
-    @using(preapprovedAssets = true, checkExternalCaller = false)
     pub fn createPolicy(coverage: U256, duration: U256) -> U256 {
         let policyId = self.policyCount
-        let premium = calculatePremium(coverage)
+        let premium = self.calculatePremium(coverage)
         
         let policy = Policy {
             holder: callerAddress!(),
@@ -42,9 +41,8 @@ Contract InsurancePool = {
         return policyId
     }
 
-    @using(preapprovedAssets = true, checkExternalCaller = false)
     pub fn submitClaim(policyId: U256, amount: U256, evidence: ByteVec) -> U256 {
-        let policy = self.policies.get(policyId)
+        let mut policy = self.policies.get(policyId)
         assert!(policy.isActive, "Policy is not active")
         assert!(amount <= policy.coverage, "Claim amount exceeds coverage")
         

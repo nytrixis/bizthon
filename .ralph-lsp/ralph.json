@@ -1,7 +1,7 @@
 {
   "contractPath": "./contracts",
   "contracts": {
-    "InsurancePool": "./contacts/insurance_pool.ral",
+    "InsurancePool": "./contracts/insurance_pool.ral",
     "PrescriptionNFT": "./contracts/prescription_nft.ral",
     "TestContract": "./contracts/test.ral"
   }
