@@ -1,23 +1,27 @@
-Contract InsurancePool {
+Contract InsurancePool(
+    mut policies: Map[(U256, Policy)],
+    mut policyCount: U256,
+    mut claimCount: U256
+) {
     event PolicyCreated(policyId: U256, holder: Address, coverage: U256)
     event ClaimSubmitted(claimId: U256, policyId: U256, amount: U256)
     event ClaimProcessed(claimId: U256, approved: Bool)
 
     struct Policy {
-        holder: Address
-        coverage: U256
-        premium: U256
-        startTime: U256
-        endTime: U256
-        isActive: Bool
-        totalClaims: U256
-        pendingClaims: U256
+        holder: Address,
+        coverage: U256,
+        premium: U256,
+        startTime: U256,
+        endTime: U256,
+        isActive: Bool,
+        totalClaims: U256,
+        pendingClaims: U256,
         approvedClaims: U256
     }
 
     @using(preapprovedAssets = true, checkExternalCaller = false)
     pub fn createPolicy(coverage: U256, duration: U256) -> U256 {
-        let policyId = contractState.policyCount
+        let policyId = self.policyCount
         let premium = calculatePremium(coverage)
         
         let policy = Policy {
@@ -32,30 +36,30 @@ Contract InsurancePool {
             approvedClaims: 0
         }
         
-        contractState.policies.put(policyId, policy)
-        contractState.policyCount = policyId + 1
+        self.policies.put(policyId, policy)
+        self.policyCount = policyId + 1
         emit PolicyCreated(policyId, callerAddress!(), coverage)
         return policyId
     }
 
     @using(preapprovedAssets = true, checkExternalCaller = false)
     pub fn submitClaim(policyId: U256, amount: U256, evidence: ByteVec) -> U256 {
-        let policy = contractState.policies.get(policyId)
+        let policy = self.policies.get(policyId)
         assert!(policy.isActive, "Policy is not active")
         assert!(amount <= policy.coverage, "Claim amount exceeds coverage")
         
-        let claimId = contractState.claimCount
+        let claimId = self.claimCount
         policy.pendingClaims = policy.pendingClaims + 1
         policy.totalClaims = policy.totalClaims + 1
         
-        contractState.policies.put(policyId, policy)
-        contractState.claimCount = claimId + 1
+        self.policies.put(policyId, policy)
+        self.claimCount = claimId + 1
         emit ClaimSubmitted(claimId, policyId, amount)
         return claimId
     }
 
     pub fn getPolicyInfo(policyId: U256) -> Policy {
-        return contractState.policies.get(policyId)
+        return self.policies.get(policyId)
     }
 
     fn calculatePremium(coverage: U256) -> U256 {
