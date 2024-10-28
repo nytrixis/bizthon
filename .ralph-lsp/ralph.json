@@ -1,0 +1,7 @@
+{
+  "contractPath": "src/components/contracts",
+  "contracts": {
+    "InsurancePool": "insurance_pool.ral",
+    "PrescriptionNFT": "prescription_nft.ral"
+  }
+}
